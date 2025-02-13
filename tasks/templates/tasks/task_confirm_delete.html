@@ -1,0 +1,14 @@
+{% extends 'tasks/base.html' %}
+
+{% block title %}タスク削除{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">タスク削除</h1>
+    <p>本当に「{{ task.title }}」を削除しますか？</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">削除</button>
+        <a href="{% url 'task_list' %}" class="btn btn-secondary">キャンセル</a>
+    </form>
+{% endblock %}

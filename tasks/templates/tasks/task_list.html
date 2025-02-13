@@ -1,0 +1,41 @@
+{% extends 'tasks/base.html' %}
+
+{% block title %}タスク一覧{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">タスク一覧</h1>
+
+    <a href="{% url 'task_create' %}" class="btn btn-success mb-3">新しいタスクを追加</a>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>タイトル</th>
+                <th>優先度</th>
+                <th>状態</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.get_priority_display }}</td>
+                    <td>
+                        {% if task.completed %}
+                            <span class="badge bg-primary">完了</span>
+                            <a href="{% url 'task_toggle_complete' task.id %}" class="btn btn-danger btn-sm">未完了にする</a>
+                        {% else %}
+                            <span class="badge bg-danger">未完了</span>
+                            <a href="{% url 'task_toggle_complete' task.id %}" class="btn btn-primary btn-sm">完了にする</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'task_edit' task.id %}" class="btn btn-info btn-sm text-light ">編集</a>
+                        <a href="{% url 'task_delete' task.id %}" class="btn btn-danger btn-sm ">削除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
