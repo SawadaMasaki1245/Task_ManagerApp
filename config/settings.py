@@ -12,6 +12,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+import os
+import environ
+
+# 環境変数を管理するためのenvオブジェクト作成
+env = environ.Env()
+# .envファイルの読み込み
+env.read_env('.env')
+# .envファイルからSECRET_KEYを読み込み
+SECRET_KEY = env('SECRET_KEY')
+# .envファイルからDEBUGの値を取得し、真偽値に変換
+DEBUG = env.bool('DEBUG', default=False)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -76,8 +88,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': env('DATABASE_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': env('DATABASE_DB', default=os.path.join(BASE_DIR, 'db.sqlite3')),
+        # 以下は、MySQLやPostgreSQLの場合に設定
+        # 'USER': env('DATABASE_USER', default='django_user'),
+        # 'PASSWORD': env('DATABASE_PASSWORD', default='password'),
+        # 'HOST': env('DATABASE_HOST', default='localhost'),
+        # 'PORT': env('DATABASE_PORT', default='5432'),
     }
 }
 
@@ -122,3 +139,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
